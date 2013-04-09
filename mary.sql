@@ -43,6 +43,9 @@ CREATE TABLE assumptions
 
 CREATE INDEX uid_index ON assumptions (uid);
 CREATE INDEX aid_index ON assumptions (aid);
+CREATE INDEX category_lowercase_index ON asssumptions (lower(category));
+CREATE INDEX name_lowercase_index ON asssumptions (lower(name));
+CREATE INDEX label_lowercase_index ON asssumptions (lower(label));
 CREATE INDEX aid_uid_ordered_index ON assumptions (aid ASC, uid DESC);
 
 CREATE VIEW latest_assumptions_including_deleted AS 
