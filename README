@@ -1,0 +1,4 @@
+# Setting up the database
+
+    dropdb mary # If you've made one before
+    psql < mary.sql 
