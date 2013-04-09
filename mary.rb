@@ -112,6 +112,42 @@ post '/' do
   assumption = single(sql, params.values)
   # FIXME: Check that the insert succeeded
   check_for_new_fields(assumption)
+  normalise_values(assumption)
   redirect to("/u#{assumption['uid']}.json")
 end
 
+def save(params)
+end
+
+def normalise_values(assumption)
+  change = {}
+  original_value = assumption['original_value']
+  uid = assumption['uid']
+  case [assumption['category'].downcase, assumption['name'].downcase]
+  when ['nuclear power', 'load factor']
+    unless original_value =~ /(\d+(\.\d+)?)(%)?/
+      note(uid, "Expecting the value to be a percentage, such as 27.8%, but it is #{original_value}.")
+    else
+      value = BigDecimal.new($1)
+      percent = $3 == "%" 
+      if !value
+        note(uid, "Couldn't recognise #{original_value[/(\d+(\.\d+)?)%?/,1]} as a number")
+      elsif (value > 100) || (value < 0)
+        note(uid, "Expecting load factor to be between 0% and 100% or less, not #{value}")
+      elsif value <= 1 && !percent
+        note(uid, "Assuming that #{original_value} is a proportion in the range 0-1")
+        value = value * 100
+      elsif !percent
+        note(uid, "Assuming that #{original_value} is a percentage in the range 0-100%")
+      end 
+      change['unit'] = '%'
+      change['value'] = value
+    end
+  else
+    note(assumption['uid'], "Do not know how to normalise #{assumption['name']} for #{assumption['category']}")
+  end
+  unless change.empty?
+    sql = "UPDATE assumptions SET (#{change.keys.map { |k| escape(k) }.join(',')}) = (#{(2..(change.size+1)).map { |i| "$#{i}" }.join(',')}) WHERE uid = $1 RETURNING *"
+    assumption = single(sql, [uid, *change.values])
+  end
+end

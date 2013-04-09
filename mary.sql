@@ -38,7 +38,7 @@ CREATE TABLE assumptions
   -- across all assumptions that share the same category and name.
   value decimal, -- 3000
   unit text, -- MWh
-  date tsrange, -- 00:00 1/01/2007 to 23:59 31/12/2007
+  date tsrange -- 00:00 1/01/2007 to 23:59 31/12/2007
 ); 
 
 CREATE INDEX uid_index ON assumptions (uid);
