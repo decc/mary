@@ -30,11 +30,8 @@ end
 # e.g., /a123
 get %r{/a(\d+).json}, provides: :json do |id|
   r = db.exec_params("SELECT * FROM latest_assumptions WHERE aid = $1", [id.to_i])
-  if r.ntuples == 0
-    return 404
-  else
-    return convert_to_ruby_types(r.first).to_json
-  end
+  return 404 if r.ntuples == 0
+  return convert_to_ruby_types(r.first).to_json
 end
 
 # The url for getting the latest version of all assumptiokns
@@ -47,11 +44,8 @@ end
 # e.g., /u438
 get %r{/u(\d+).json}, provides: :json do |id|
   r = db.exec_params("SELECT * FROM assumptions WHERE uid = $1", [id.to_i])
-  if r.ntuples == 0
-    return 404
-  else
-    return convert_to_ruby_types(r.first).to_json
-  end
+  return 404 if r.ntuples == 0
+  return convert_to_ruby_types(r.first).to_json
 end
 
 # The root url. Just returns index.html at the moment
