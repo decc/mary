@@ -4,6 +4,8 @@ require 'json'
 require 'bigdecimal'
 require 'date'
 
+# FIXME: All this needs to be refactored into objects
+
 # Configure Sinatra and libraries
 $db = PG::Connection.open(dbname: 'mary')
 
@@ -112,15 +114,16 @@ post '/' do
   assumption = single(sql, params.values)
   # FIXME: Check that the insert succeeded
   check_for_new_fields(assumption)
-  normalise_values(assumption)
+  normalise(assumption)
   redirect to("/u#{assumption['uid']}.json")
 end
 
 def save(params)
 end
 
-def normalise_values(assumption)
+def normalise(assumption)
   change = {}
+  # First we normalise the value
   original_value = assumption['original_value']
   uid = assumption['uid']
   case [assumption['category'].downcase, assumption['name'].downcase]
@@ -144,10 +147,29 @@ def normalise_values(assumption)
       change['value'] = value
     end
   else
-    note(assumption['uid'], "Do not know how to normalise #{assumption['name']} for #{assumption['category']}")
+    note(uid, "Do not know how to normalise #{assumption['name']} for #{assumption['category']}")
   end
+  # Now we try and normalise the period
+  period = assumption['original_period']
+  case period
+  when /(\d{2,4})/
+    year = $1.to_i
+    if year <= 50
+      note(uid, "Assuming #{year} is #{year+2000}")
+      year = year + 2000
+    elsif year < 100
+      note(uid, "Assuming #{year} is #{year+1900}")
+      year = year + 1900
+    end
+    note(uid, "Assuming #{year} is calendar year")
+    change['period'] = "[#{year}-01-01, #{year+1}-01-01)" # Square bracket is inclusive, round bracket is exclusive
+  else
+    note(uid, "Do not know how to normalise the period #{period}")
+  end
+  
   unless change.empty?
     sql = "UPDATE assumptions SET (#{change.keys.map { |k| escape(k) }.join(',')}) = (#{(2..(change.size+1)).map { |i| "$#{i}" }.join(',')}) WHERE uid = $1 RETURNING *"
     assumption = single(sql, [uid, *change.values])
   end
 end
+

@@ -32,13 +32,13 @@ CREATE TABLE assumptions
 
   -- Specifies this specific assumption, in the format entered
   original_value text, -- 3 TWh, £1000/kW
-  original_date text, -- 2007, Jan 2007, heating year 2007
+  original_period text, -- 2007, Jan 2007, heating year 2007
 
   -- A normalised version of the assumption. The unit should be the same
   -- across all assumptions that share the same category and name.
   value decimal, -- 3000
   unit text, -- MWh
-  date tsrange -- 00:00 1/01/2007 to 23:59 31/12/2007
+  period tsrange -- 00:00 1/01/2007 to 23:59 31/12/2007
 ); 
 
 CREATE INDEX uid_index ON assumptions (uid);
