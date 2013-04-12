@@ -24,7 +24,7 @@ CREATE TABLE assumptions
 
   -- Specifies what kind of assumption we are entering
   category text NOT NULL, -- i.e., Nuclear Power
-  name text NOT NULL,  -- i.e., Capital Cost, Load Factor
+  parameter text NOT NULL,  -- i.e., Capital Cost, Load Factor
 
   -- Specifies this specific assumption's provenance
   source text NOT NULL, -- i.e., Markal 3.26

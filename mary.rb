@@ -50,13 +50,13 @@ def convert_to_ruby_types(hash)
   hash
 end
 
-# This is used to check whether a record has created a new category, name or source
+# This is used to check whether a record has created a new category, parameter name or source
 # If one has, then warns about it.
 def check_for_new_fields(hash)
   if new_value?('category', hash['category'])
     note(hash['uid'], "You have created a new category '#{hash['category']}'. Did you mean to?") 
-  elsif new_value?('name', hash['name'])
-    note(hash['uid'], "You have created a new property of '#{hash['category']}', '#{hash['name']}'. Did you mean to?") 
+  elsif new_value?('parameter', hash['parameter'])
+    note(hash['uid'], "You have created a new property of '#{hash['category']}', '#{hash['parameter']}'. Did you mean to?") 
   end
   if new_value?('source', hash['source'])
     note(hash['uid'], "You have created a new source '#{hash['source']}'. Did you mean to?")
@@ -126,7 +126,7 @@ def normalise(assumption)
   # First we normalise the value
   original_value = assumption['original_value']
   uid = assumption['uid']
-  case [assumption['category'].downcase, assumption['name'].downcase]
+  case [assumption['category'].downcase, assumption['parameter'].downcase]
   when ['nuclear power', 'load factor']
     unless original_value =~ /(\d+(\.\d+)?)(%)?/
       note(uid, "Expecting the value to be a percentage, such as 27.8%, but it is #{original_value}.")
@@ -147,7 +147,7 @@ def normalise(assumption)
       change['value'] = value
     end
   else
-    note(uid, "Do not know how to normalise #{assumption['name']} for #{assumption['category']}")
+    note(uid, "Do not know how to normalise #{assumption['parameter']} for #{assumption['category']}")
   end
   # Now we try and normalise the period
   period = assumption['original_period']
