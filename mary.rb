@@ -45,6 +45,9 @@ def convert_to_ruby_types(hash)
     when 'deleted'; hash[key] = value == 't'
     when 'value'; hash[key] = BigDecimal.new(value)
     when 'count'; hash[key] = value.to_i
+    when 'period'
+      value =~ /"(.*?)","(.*?)"/
+      hash[key] = [DateTime.parse($1), DateTime.parse($2)]
     end
   end
   hash
