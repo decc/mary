@@ -101,6 +101,18 @@ get %r{/u(\d+).json}, provides: :json do |id|
   assumption.to_json
 end
 
+# The url for getting all assumptions in a category
+get '/category/:category' do |category|
+  assumptions = multiple("SELECT * FROM latest_assumptions WHERE lower(category) = lower($1)", [category])
+  assumptions.to_json
+end
+
+# The url for getting all assumptions for a particular paramater in a category
+get '/category/:category/parameter/:parameter' do |category, parameter|
+  assumptions = multiple("SELECT * FROM latest_assumptions WHERE lower(category) = lower($1) AND lower(parameter) = lower($2)", [category, parameter])
+  assumptions.to_json
+end
+
 # The root url. Just returns index.html at the moment
 get '/' do
   send_file 'public/index.html'
