@@ -167,7 +167,7 @@ def normalise(assumption)
   # Now we try and normalise the period
   period = assumption['original_period']
   case period
-  when /(\d{2,4})/
+  when /(\d{1,4})/
     year = $1.to_i
     if year <= 50
       note(uid, "Assuming #{year} is #{year+2000}")
