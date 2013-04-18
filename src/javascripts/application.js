@@ -4,6 +4,4 @@
 //= require jquery-1.9.1
 //= require d3.min
 
-// Now the common methods
-
-// Now the individual views
+//= require chart

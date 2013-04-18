@@ -1,0 +1,57 @@
+body {
+  font: 10px sans-serif;
+}
+
+h1 {
+	margin-bottom: 0;
+}
+
+.tagline {
+	margin-top: 0;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+text.axis-title {
+	font-weight: bold;
+}
+
+.data-line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 3px;
+}
+
+table {
+	font-size: 100%;
+	padding-top: 50px;
+}
+
+th.unit, td.name {
+	text-align: left;
+	width: 80px;
+}
+
+th.year {
+	text-align: right;
+}
+
+td.flow-value {
+	text-align: right;
+	padding-left: 10px;
+}
+
+#downloads p, #downloads ul {
+	display: inline;
+	padding-left: 0;
+}
+
+#downloads ul li {
+	display: inline;
+}
+
+
